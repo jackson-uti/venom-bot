@@ -7,8 +7,8 @@ export const filterObjects = [
         : null
   },
   {
-    type: 'MaybeMeUser',
-    when: (module) => (module.getMaybeMeUser ? module : null)
+    type: 'MaybeMePnUser',
+    when: (module) => (module.getMaybeMePnUser ? module : null)
   },
   {
     type: 'Participants',

@@ -32,6 +32,7 @@ export async function getStore(modules) {
   });
 
   const module = (neededObjects.filter((e) => e.id === 'module'))[0].foundedModule;
+  console.log(`Esta quebrando aqui ${module}`);
   Object.keys(module).forEach((key) => {
     if (![
       'Chat',

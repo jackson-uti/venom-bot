@@ -250,8 +250,8 @@ export const storeObjects = [
         : null,
   },
   {
-    id: 'MaybeMeUser',
-    conditions: (module) => (module.getMaybeMeUser ? module : null),
+    id: 'MaybeMePnUser',
+    conditions: (module) => (module.getMaybeMePnUser ? module : null),
   },
   {
     id: 'Sticker',
