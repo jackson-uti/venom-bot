@@ -14,10 +14,10 @@ export const getInterfaceStatus = async (waPage: puppeteer.Page) => {
           return { type: erroHTTP[0].innerText };
         }
         const elLoginWrapper = document.querySelector(
-          'body > div > div > .landing-wrapper'
+          'body > div > div > .app-wrapper-web'
         );
         const elLoginWrapper2 = document.querySelector(
-          'body > div > div > div > .landing-wrapper'
+          'body > div > div > div > .app-wrapper-web'
         );
         const elQRCodeCanvas = document.querySelector('canvas');
         if (

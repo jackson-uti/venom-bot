@@ -31,19 +31,48 @@ export async function getStore(modules) {
     }
   });
 
-  const module = (neededObjects.filter((e) => e.id === 'module'))[0].foundedModule;
-  console.log(`Esta quebrando aqui ${module}`);
-  Object.keys(module).forEach((key) => {
-    if (![
+  // Adicione um contador global para as tentativas de recarga
+  // Isso persistirá entre as recargas da página.
+  window.venomModuleReloadAttempts = window.venomModuleReloadAttempts || 0;
+  const MAX_RELOAD_ATTEMPTS = 3; // Defina um número máximo de tentativas de recarga
+
+  const module = (neededObjects.filter((e) => e.id === 'module'))[0]?.foundedModule;
+  // O operador ?. (optional chaining) aqui ajuda a prevenir erros se o filtro retornar um array vazio
+  // ou se 'foundedModule' não existir na primeira posição.
+
+  console.log(`Verificando o módulo: ${module}`);
+
+  // Corrigindo a condição: queremos recarregar SE o módulo FOR undefined
+  if (module === undefined) {
+    if (window.venomModuleReloadAttempts < MAX_RELOAD_ATTEMPTS) {
+      window.venomModuleReloadAttempts++; // Incrementa o contador
+      console.warn(`Módulo "module" indefinido. Tentativa ${window.venomModuleReloadAttempts} de ${MAX_RELOAD_ATTEMPTS}. Recarregando a página...`);
+      window.location.reload(); // Recarrega a página
+      return; // É crucial sair da função para não tentar processar 'module' indefinido
+    } else {
+      console.error(`Módulo "module" indefinido após ${MAX_RELOAD_ATTEMPTS} tentativas. Não foi possível carregar o Venom-Bot. Por favor, reinicie manualmente.`);
+      // Opcionalmente, você pode querer lançar um erro ou parar o bot de outra forma aqui.
+      throw new Error("Falha ao carregar o módulo crítico após múltiplas tentativas.");
+    }
+  }
+
+  // Se chegamos até aqui, o módulo foi carregado com sucesso.
+  // Podemos resetar o contador para a próxima vez que esta função for chamada.
+  window.venomModuleReloadAttempts = 0;
+
+Object.keys(module).forEach((key) => {
+  if (![
       'Chat',
     ].includes(key)) {
-      if (window.Store[key]) {
-        window.Store[key + '_'] = module[key];
-      } else {
-        window.Store[key] = module[key];
-      }
+    if (window.Store[key]) {
+      window.Store[key + '_'] = module[key];
+    } else {
+      window.Store[key] = module[key];
     }
-  });
+  }
+});
+
+console.log('Módulo "module" carregado com sucesso e injetado no Store.');
 
   if (window.Store.MediaCollection) {
     window.Store.MediaCollection.prototype.processFiles =
